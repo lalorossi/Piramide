@@ -25,6 +25,39 @@ class Tablero:
 				celda=Celda()
 				self.Piramide.append(celda)
 
+	#Funcion para establecer relaciones entre las celdas
+	#Se toma a PADRE como la celda superior derecha, y MADRE a la superior izquierda
+	#HERMANO a la celda de la derecha y HERMANA a la de la izquierda
+	#HIJO a la celda inferior derecha e HIJA a la inferior izquierda
+	def EstablecerRelaciones(self):
+		for fila in range (6):
+
+			for celda in range (6-filas):
+				#La fila superior solo tiene "parientes" hijos
+				if fila!=5:
+
+					if celda!=(6-filas-1):
+						#Si NO es la celda de la derecha
+						self.Piramide[i].EstablecerPadre(self.Piramide[celda+(6-fila)])
+						self.Piramide[i].EstablecerHermano(self.Piramide[celda+1])
+						#SE PUDRE TODO CUANDO ES LA PUNTA DE LA PIRAMIDE
+
+
+					elif celda!=(0):
+						#Si NO es la celda de la izquierda
+						self.Piramide[i].EstablecerMadre(self.Piramide[celda+((6-fila)-1)])
+						self.Piramide[i].EstablecerHermana(self.Piramide[celda-1])
+						#SE PUDRE TODO CUANDO ES LA PUNTA DE LA PIRAMIDE
+
+
+				if fila!=0:
+					#Son las celdas que tienen HIJOS (Todas menos las de la base)
+						self.Piramide[i].EstablecerHijo(self.Piramide[celda-(6-fila+1)])
+						self.Piramide[i].EstablecerHija(self.Piramide[celda-(6-fila)])
+
+
+
+	
 	def MostrarPiramide(self):
 		self._ArrayDeValores=[]
 		pos=0
@@ -41,7 +74,7 @@ class Tablero:
 			numeros=pos+6-i
 			print (self._ArrayDeValores[pos:numeros])
 			pos+=(6-i)
-
+	
 
 #La clase celda son los elementos dentro del tablero, cada una con su valor
 class Celda:
@@ -56,6 +89,29 @@ class Celda:
 
 	def getValor(self):
 		return self._Valor
+
+
+	#Funciones para establecer la relacion de una celda con otras
+	def EstablecerPadre(self, Padre):
+		self._Padre=Padre
+
+	def EstablecerMadre(self, Madre):
+		self._Madre=Madre
+
+	def EstablecerHermano(self, Hermano):
+		self._Hermano=Hermano
+
+	def EstablecerHermana(self, Hermana):
+		self._Hermana=Hermana
+
+	def Establecer Hijo(Hijo):
+		self._Hijo=Hijo
+
+	def Establecer Hija(Hija):
+		self._Hija=Hija
+
+
+
 
 
 NuevoJuego=Juego()
