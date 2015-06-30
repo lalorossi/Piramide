@@ -30,32 +30,58 @@ class Tablero:
 	#HERMANO a la celda de la derecha y HERMANA a la de la izquierda
 	#HIJO a la celda inferior derecha e HIJA a la inferior izquierda
 	def EstablecerRelaciones(self):
+		self._PosArray=0
+
 		for fila in range (6):
 
-			for celda in range (6-filas):
+			for celda in range (6-fila):
+
+				print ("FILA: %d" %fila)
+				print ("CELDA %d" %celda)
+				print ("POS %d" %self._PosArray)
+				print ("")
+
 				#La fila superior solo tiene "parientes" hijos
 				if fila!=5:
 
-					if celda!=(6-filas-1):
+					if celda!=(6-fila-1):
 						#Si NO es la celda de la derecha
-						self.Piramide[i].EstablecerPadre(self.Piramide[celda+(6-fila)])
-						self.Piramide[i].EstablecerHermano(self.Piramide[celda+1])
+						self.Piramide[self._PosArray].EstablecerPadre(self.Piramide[celda+(6-fila)])
+						self.Piramide[self._PosArray].EstablecerHermano(self.Piramide[celda+1])
 						#SE PUDRE TODO CUANDO ES LA PUNTA DE LA PIRAMIDE
 
 
-					elif celda!=(0):
+					if celda!=(0):
 						#Si NO es la celda de la izquierda
-						self.Piramide[i].EstablecerMadre(self.Piramide[celda+((6-fila)-1)])
-						self.Piramide[i].EstablecerHermana(self.Piramide[celda-1])
+						self.Piramide[self._PosArray].EstablecerMadre(self.Piramide[celda+((6-fila)-1)])
+						self.Piramide[self._PosArray].EstablecerHermana(self.Piramide[celda-1])
 						#SE PUDRE TODO CUANDO ES LA PUNTA DE LA PIRAMIDE
 
 
 				if fila!=0:
 					#Son las celdas que tienen HIJOS (Todas menos las de la base)
-						self.Piramide[i].EstablecerHijo(self.Piramide[celda-(6-fila+1)])
-						self.Piramide[i].EstablecerHija(self.Piramide[celda-(6-fila)])
+						self.Piramide[self._PosArray].EstablecerHija(self.Piramide[celda-(7-fila)])
+						self.Piramide[self._PosArray].EstablecerHijo(self.Piramide[celda-(6-fila)])
 
 
+				self._PosArray+=1
+
+
+	def MostrarFamiliares(self, Celda):
+		ValorPadre=self.Piramide[Celda].Padre.getValor()
+		ValorMadre=self.Piramide[Celda].Madre.getValor()
+		ValorHermano=self.Piramide[Celda].Hermano.getValor()
+		ValorHermana=self.Piramide[Celda].Hermana.getValor()
+		ValorHijo=self.Piramide[Celda].Hijo.getValor()
+		ValorHija=self.Piramide[Celda].Hija.getValor()
+
+
+		print ("Padre: %d" %ValorPadre)
+		print ("Madre: %d" %ValorMadre)
+		print ("Hermano: %d" %ValorHermano)
+		print ("Hermana: %d" %ValorHermana)
+		print ("Hijo: %d" %ValorHijo)
+		print ("Hija: %d" %ValorHija)
 
 	
 	def MostrarPiramide(self):
@@ -85,7 +111,7 @@ class Celda:
 		if Valor == ' ':
 			Valor=0
 
-		self._Valor=Valor
+		self._Valor=int(Valor)
 
 	def getValor(self):
 		return self._Valor
@@ -93,22 +119,22 @@ class Celda:
 
 	#Funciones para establecer la relacion de una celda con otras
 	def EstablecerPadre(self, Padre):
-		self._Padre=Padre
+		self.Padre=Padre
 
 	def EstablecerMadre(self, Madre):
-		self._Madre=Madre
+		self.Madre=Madre
 
 	def EstablecerHermano(self, Hermano):
-		self._Hermano=Hermano
+		self.Hermano=Hermano
 
 	def EstablecerHermana(self, Hermana):
-		self._Hermana=Hermana
+		self.Hermana=Hermana
 
-	def Establecer Hijo(Hijo):
-		self._Hijo=Hijo
+	def EstablecerHijo(self, Hijo):
+		self.Hijo=Hijo
 
-	def Establecer Hija(Hija):
-		self._Hija=Hija
+	def EstablecerHija(self, Hija):
+		self.Hija=Hija
 
 
 
@@ -117,3 +143,7 @@ class Celda:
 NuevoJuego=Juego()
 
 NuevoJuego.Tablero.MostrarPiramide()
+
+NuevoJuego.Tablero.EstablecerRelaciones()
+
+NuevoJuego.Tablero.MostrarFamiliares(12)
