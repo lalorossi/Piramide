@@ -36,33 +36,28 @@ class Tablero:
 
 			for celda in range (6-fila):
 
-				print ("FILA: %d" %fila)
-				print ("CELDA %d" %celda)
-				print ("POS %d" %self._PosArray)
-				print ("")
-
 				#La fila superior solo tiene "parientes" hijos
 				if fila!=5:
 
 					if celda!=(6-fila-1):
 						#Si NO es la celda de la derecha
-						self.Piramide[self._PosArray].EstablecerPadre(self.Piramide[celda+(6-fila)])
-						self.Piramide[self._PosArray].EstablecerHermano(self.Piramide[celda+1])
+						self.Piramide[self._PosArray].EstablecerPadre(self.Piramide[self._PosArray+(6-fila)])
+						self.Piramide[self._PosArray].EstablecerHermano(self.Piramide[self._PosArray+1])
 						#SE PUDRE TODO CUANDO ES LA PUNTA DE LA PIRAMIDE
+
 
 
 					if celda!=(0):
 						#Si NO es la celda de la izquierda
-						self.Piramide[self._PosArray].EstablecerMadre(self.Piramide[celda+((6-fila)-1)])
-						self.Piramide[self._PosArray].EstablecerHermana(self.Piramide[celda-1])
+						self.Piramide[self._PosArray].EstablecerMadre(self.Piramide[self._PosArray+((6-fila)-1)])
+						self.Piramide[self._PosArray].EstablecerHermana(self.Piramide[self._PosArray-1])
 						#SE PUDRE TODO CUANDO ES LA PUNTA DE LA PIRAMIDE
 
 
 				if fila!=0:
 					#Son las celdas que tienen HIJOS (Todas menos las de la base)
-						self.Piramide[self._PosArray].EstablecerHija(self.Piramide[celda-(7-fila)])
-						self.Piramide[self._PosArray].EstablecerHijo(self.Piramide[celda-(6-fila)])
-
+						self.Piramide[self._PosArray].EstablecerHija(self.Piramide[self._PosArray-(7-fila)])
+						self.Piramide[self._PosArray].EstablecerHijo(self.Piramide[self._PosArray-(6-fila)])
 
 				self._PosArray+=1
 
@@ -94,6 +89,7 @@ class Tablero:
 			self._ArrayDeValores.append(self.Piramide[i].getValor())
 
 		print ("")
+		print (self._ArrayDeValores)
 
 		#muestro los primeros 6 valores, luego los siguientes 5, etc.
 		for i in range(6):
@@ -108,14 +104,12 @@ class Celda:
 	#Al crear una celda, esta nos pregunta su valor
 	def __init__ (self):
 		Valor=input("Ingrese el valor de la celda: ")
-		if Valor == ' ':
-			Valor=0
-
+	
 		self._Valor=int(Valor)
+
 
 	def getValor(self):
 		return self._Valor
-
 
 	#Funciones para establecer la relacion de una celda con otras
 	def EstablecerPadre(self, Padre):
@@ -146,4 +140,4 @@ NuevoJuego.Tablero.MostrarPiramide()
 
 NuevoJuego.Tablero.EstablecerRelaciones()
 
-NuevoJuego.Tablero.MostrarFamiliares(12)
+NuevoJuego.Tablero.MostrarFamiliares(7)
