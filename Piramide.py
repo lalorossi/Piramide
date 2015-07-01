@@ -60,12 +60,14 @@ class Tablero:
 				self._PosArray+=1
 
 	def ResolverTablero(self):
+		self.Posicion=0
 		Cambio=True
 		while (Cambio):
 			Cambio=False
 			for i in range (21):
+				self.Posicion+=1
 				if self.Piramide[i].getEstado() == False:
-					self.Piramide[i].ResolverCelda()
+					self.Piramide[i].ResolverCelda(self.Piramide[self.Posicion])
 
 					if self.Piramide[i].getEstado():
 						Cambio=True
@@ -156,7 +158,7 @@ class Celda:
 
 	#Funcion que trata de ponerle una valor a la celda, comunicandose con sus parientes
 	#Esta funcion solo se llama cuando self._Resuelto es False (La celda no está resuelta)
-	def ResolverCelda(self):
+	def ResolverCelda(self, Invocador):
 		#Hay 2 maneras de resolver una celda:
 		#1- Tiene un padre y un hermano del mismo "genero" resuelto
 		#2- Tiene los 2 hijos resueltos
@@ -170,12 +172,7 @@ class Celda:
 					self._Valor	=self.Padre.getValor() - self.Hermano.getValor()
 					self._Resuelto=True
 
-				#Si no se puede resolver, trata de resolver a sus parientes
-				"""else:
-					if self.Padre.getEstado()==False:
-						self.Padre.ResolverCelda()
-					if self.Hermano.getEstado()==False:
-						self.Hermano.ResolverCelda()"""
+
 
 			#1- No se aplica a las celdas del costado izquierdo
 			if (self.Posicion != 0):
@@ -183,13 +180,6 @@ class Celda:
 					self._Valor	=self.Madre.getValor() - self.Hermana.getValor()
 					self._Resuelto=True
 
-				#Si no se puede resolver, trata de resolver a sus parientes
-				"""else:
-					if self.Madre.getEstado()==False:
-						self.Madre.ResolverCelda()
-
-					if self.Hermana.getEstado()==False:
-						self.Hermana.ResolverCelda()"""
 
 
 		#2- No se aplica a las celdas de la base
@@ -198,39 +188,32 @@ class Celda:
 				self._Valor =self.Hija.getValor() + self.Hijo.getValor()
 				self._Resuelto=True
 
-			#Si no se puede resolver, trata de resolver a sus parientes
-			"""else:
-				if self.Hijo.getEstado()==False:
-					self.Hijo.ResolverCelda()
 
-				if self.Hija.getEstado()==False:
-					self.Hija.ResolverCelda()"""
-
+		#Una vez que trato de resolverse, trata de resolver a sus parientes
 		if (self.Fila != 5):
-	#No se aplica a las celdas del costado derecho
 			if self.Posicion != (6-self.Fila-1):
-				if self.Padre.getEstado()==False:
-					self.Padre.ResolverCelda()
-				if self.Hermano.getEstado()==False:
-					self.Hermano.ResolverCelda()
+				if self.Padre.getEstado()==False and Invocador != self.Padre:
+					self.Padre.ResolverCelda(self)
+				if self.Hermano.getEstado()==False and Invocador != self.Hermano:
+					self.Hermano.ResolverCelda(self)
 
 			#1- No se aplica a las celdas del costado izquierdo
 			if (self.Posicion != 0):
 
-				if self.Madre.getEstado()==False:
-					self.Madre.ResolverCelda()
+				if self.Madre.getEstado()==False and Invocador != self.Madre:
+					self.Madre.ResolverCelda(self)
 
-				if self.Hermana.getEstado()==False:
-					self.Hermana.ResolverCelda()
+				if self.Hermana.getEstado()==False and Invocador != self.Hermana:
+					self.Hermana.ResolverCelda(self)
 
 
 		#2- No se aplica a las celdas de la base
 		if self.Fila != 0:
-			if self.Hijo.getEstado()==False:
-				self.Hijo.ResolverCelda()
+			if self.Hijo.getEstado()==False and Invocador != self.Hijo:
+				self.Hijo.ResolverCelda(self)
 
-			if self.Hija.getEstado()==False:
-				self.Hija.ResolverCelda()
+			if self.Hija.getEstado()==False and Invocador != self.Hija:
+				self.Hija.ResolverCelda(self)
 
 
 
