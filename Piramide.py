@@ -6,7 +6,7 @@ class Juego:
 		self.Tablero=Tablero()
 
 	def IniciarJuego(self):
-		pass
+		  self.Tablero.ResolverTablero()
 
 #La clase Tablero Es solamente la piramide, tomada como un array de los numeros que contiene
 class Tablero:
@@ -58,6 +58,20 @@ class Tablero:
 						self.Piramide[self._PosArray].EstablecerHijo(self.Piramide[self._PosArray-(6-fila)])
 
 				self._PosArray+=1
+
+	def ResolverTablero(self):
+		Cambio=True
+		while (Cambio):
+			Cambio=False
+			for i in range (21):
+				if self.Piramide[i].getEstado() == False:
+					self.Piramide[i].ResolverCelda()
+
+					if self.Piramide[i].getEstado():
+						Cambio=True
+		else:
+			print ("Ganaste??")
+			self.MostrarPiramide()
 
 
 	def MostrarFamiliares(self, Celda):
@@ -154,53 +168,82 @@ class Celda:
 			if self.Posicion != (6-self.Fila-1):
 				if self.Padre.getEstado() and self.Hermano.getEstado():
 					self._Valor	=self.Padre.getValor() - self.Hermano.getValor()
+					self._Resuelto=True
 
-				else:
+				#Si no se puede resolver, trata de resolver a sus parientes
+				"""else:
 					if self.Padre.getEstado()==False:
 						self.Padre.ResolverCelda()
 					if self.Hermano.getEstado()==False:
-						self.Hermano.ResolverCelda()
+						self.Hermano.ResolverCelda()"""
 
 			#1- No se aplica a las celdas del costado izquierdo
 			if (self.Posicion != 0):
 				if self.Madre.getEstado() and self.Hermana.getEstado():
 					self._Valor	=self.Madre.getValor() - self.Hermana.getValor()
+					self._Resuelto=True
 
-				else:
+				#Si no se puede resolver, trata de resolver a sus parientes
+				"""else:
 					if self.Madre.getEstado()==False:
 						self.Madre.ResolverCelda()
 
 					if self.Hermana.getEstado()==False:
-						self.Hermana.ResolverCelda()
+						self.Hermana.ResolverCelda()"""
 
 
 		#2- No se aplica a las celdas de la base
 		if self.Fila != 0:
 			if self.Hijo.getEstado() and self.Hija.getEstado():
 				self._Valor =self.Hija.getValor() + self.Hijo.getValor()
+				self._Resuelto=True
 
-			else:
+			#Si no se puede resolver, trata de resolver a sus parientes
+			"""else:
 				if self.Hijo.getEstado()==False:
 					self.Hijo.ResolverCelda()
 
 				if self.Hija.getEstado()==False:
-					self.Hija.ResolverCelda()
+					self.Hija.ResolverCelda()"""
 
-		#En caso de que no se pueda resolver, mandará a todos sus parientes no resueltos a que se resuelvan
+		if (self.Fila != 5):
+	#No se aplica a las celdas del costado derecho
+			if self.Posicion != (6-self.Fila-1):
+				if self.Padre.getEstado()==False:
+					self.Padre.ResolverCelda()
+				if self.Hermano.getEstado()==False:
+					self.Hermano.ResolverCelda()
+
+			#1- No se aplica a las celdas del costado izquierdo
+			if (self.Posicion != 0):
+
+				if self.Madre.getEstado()==False:
+					self.Madre.ResolverCelda()
+
+				if self.Hermana.getEstado()==False:
+					self.Hermana.ResolverCelda()
+
+
+		#2- No se aplica a las celdas de la base
+		if self.Fila != 0:
+			if self.Hijo.getEstado()==False:
+				self.Hijo.ResolverCelda()
+
+			if self.Hija.getEstado()==False:
+				self.Hija.ResolverCelda()
+
 
 
 
 NuevoJuego=Juego()
 
-NuevoJuego.Tablero.MostrarPiramide()
-
 NuevoJuego.Tablero.EstablecerRelaciones()
 
-#NuevoJuego.Tablero.MostrarFamiliares(7)
+NuevoJuego.IniciarJuego()
 
-NuevoJuego.Tablero.Piramide[0].ResolverCelda()
-print (NuevoJuego.Tablero.Piramide[0].getValor())
-NuevoJuego.Tablero.Piramide[15].ResolverCelda()
-print (NuevoJuego.Tablero.Piramide[15].getValor())
-NuevoJuego.Tablero.Piramide[20].ResolverCelda()
-print (NuevoJuego.Tablero.Piramide[20].getValor())
+"""
+El programa tiene un error:
+Si dos celdas contiguas estan vacias, ambas trataran de resolverse mutuamente
+Generando un ciclo infinito
+NO SÉ CÓMO ARREGLARLO
+"""
