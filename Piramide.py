@@ -22,7 +22,7 @@ class Tablero:
 			print ("O ingrese un 0 para dejar la celda vacia")
 			print ("")
 			for posicion in range(6-filas):
-				celda=Celda()
+				celda=Celda(filas, posicion)
 				self.Piramide.append(celda)
 
 	#Funcion para establecer relaciones entre las celdas
@@ -39,11 +39,10 @@ class Tablero:
 				#La fila superior solo tiene "parientes" hijos
 				if fila!=5:
 
-					if celda!=(6-fila-1):
+					if celda!=(6-fila-1) :
 						#Si NO es la celda de la derecha
 						self.Piramide[self._PosArray].EstablecerPadre(self.Piramide[self._PosArray+(6-fila)])
 						self.Piramide[self._PosArray].EstablecerHermano(self.Piramide[self._PosArray+1])
-						#SE PUDRE TODO CUANDO ES LA PUNTA DE LA PIRAMIDE
 
 
 
@@ -51,7 +50,6 @@ class Tablero:
 						#Si NO es la celda de la izquierda
 						self.Piramide[self._PosArray].EstablecerMadre(self.Piramide[self._PosArray+((6-fila)-1)])
 						self.Piramide[self._PosArray].EstablecerHermana(self.Piramide[self._PosArray-1])
-						#SE PUDRE TODO CUANDO ES LA PUNTA DE LA PIRAMIDE
 
 
 				if fila!=0:
@@ -102,16 +100,27 @@ class Tablero:
 class Celda:
 
 	#Al crear una celda, esta nos pregunta su valor
-	def __init__ (self):
+	def __init__ (self, fila, posicion):
+		self.Fila=fila
+		self.Posicion=posicion
 		Valor=input("Ingrese el valor de la celda: ")
 	
 		self._Valor=int(Valor)
+
+		if self._Valor==0:
+			self._Resuelto=False
+		else:
+			self._Resuelto=True
 
 
 	def getValor(self):
 		return self._Valor
 
+	def getEstado(self):
+		return self._Resuelto
+
 	#Funciones para establecer la relacion de una celda con otras
+
 	def EstablecerPadre(self, Padre):
 		self.Padre=Padre
 
@@ -131,6 +140,53 @@ class Celda:
 		self.Hija=Hija
 
 
+	#Funcion que trata de ponerle una valor a la celda, comunicandose con sus parientes
+	#Esta funcion solo se llama cuando self._Resuelto es False (La celda no está resuelta)
+	def ResolverCelda(self):
+		#Hay 2 maneras de resolver una celda:
+		#1- Tiene un padre y un hermano del mismo "genero" resuelto
+		#2- Tiene los 2 hijos resueltos
+
+		#1- No se aplica a la celda superior
+		if (self.Fila != 5):
+
+			#No se aplica a las celdas del costado derecho
+			if self.Posicion != (6-self.Fila-1):
+				if self.Padre.getEstado() and self.Hermano.getEstado():
+					self._Valor	=self.Padre.getValor() - self.Hermano.getValor()
+
+				else:
+					if self.Padre.getEstado()==False:
+						self.Padre.ResolverCelda()
+					if self.Hermano.getEstado()==False:
+						self.Hermano.ResolverCelda()
+
+			#1- No se aplica a las celdas del costado izquierdo
+			if (self.Posicion != 0):
+				if self.Madre.getEstado() and self.Hermana.getEstado():
+					self._Valor	=self.Madre.getValor() - self.Hermana.getValor()
+
+				else:
+					if self.Madre.getEstado()==False:
+						self.Madre.ResolverCelda()
+
+					if self.Hermana.getEstado()==False:
+						self.Hermana.ResolverCelda()
+
+
+		#2- No se aplica a las celdas de la base
+		if self.Fila != 0:
+			if self.Hijo.getEstado() and self.Hija.getEstado():
+				self._Valor =self.Hija.getValor() + self.Hijo.getValor()
+
+			else:
+				if self.Hijo.getEstado()==False:
+					self.Hijo.ResolverCelda()
+
+				if self.Hija.getEstado()==False:
+					self.Hija.ResolverCelda()
+
+		#En caso de que no se pueda resolver, mandará a todos sus parientes no resueltos a que se resuelvan
 
 
 
@@ -140,4 +196,11 @@ NuevoJuego.Tablero.MostrarPiramide()
 
 NuevoJuego.Tablero.EstablecerRelaciones()
 
-NuevoJuego.Tablero.MostrarFamiliares(7)
+#NuevoJuego.Tablero.MostrarFamiliares(7)
+
+NuevoJuego.Tablero.Piramide[0].ResolverCelda()
+print (NuevoJuego.Tablero.Piramide[0].getValor())
+NuevoJuego.Tablero.Piramide[15].ResolverCelda()
+print (NuevoJuego.Tablero.Piramide[15].getValor())
+NuevoJuego.Tablero.Piramide[20].ResolverCelda()
+print (NuevoJuego.Tablero.Piramide[20].getValor())
